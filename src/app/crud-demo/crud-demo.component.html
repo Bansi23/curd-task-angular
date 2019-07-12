@@ -1,0 +1,243 @@
+<div class="mx-5 my-5">
+  <div class="row form-group">
+    <div class="col col-lg-12">
+      <button class="btn btn-info btn-sm" (click)="AddRecord()" [disabled]="updateIndex > -1 ? true : false"><i
+          class="fa fa-plus"></i>&nbsp; Add</button>&nbsp;
+      <button class="btn btn-danger btn-sm pull-right" (click)="deleteAll()"
+        [disabled]="updateIndex > -1 ? true : false"><i class="fa fa-trash"></i>&nbsp;Delete
+        All</button>
+    </div>
+  </div>
+
+  <form [formGroup]="studentForm">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+        <tr>
+          <th colspan="12" style="text-align: center">
+            <h6>Student Data</h6>
+          </th>
+        </tr>
+        <tr>
+          <th></th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>E-mail</th>
+          <th>C</th>
+          <th>Java</th>
+          <th>Asp.net</th>
+          <th>Total</th>
+          <th>Per(%)</th>
+          <th>Grade</th>
+          <th>Actions</th>
+        </tr>
+        <tbody>
+          <tr *ngFor="let tabledata of lstStudentData; let i=index">
+            <ng-container *ngIf="updateIndex != i; else elseTemplate">
+              <td>
+                <input type="checkbox" [disabled]="isdisabled" [checked]=tabledata.isselect>
+              </td>
+              <td>{{ tabledata.fname | titlecase}}</td>
+              <td>{{ tabledata.lname | titlecase}}</td>
+              <td>{{ tabledata.mail | lowercase }}</td>
+              <td>{{ tabledata.clan }}</td>
+              <td>{{ tabledata.java }}</td>
+              <td>{{ tabledata.asp }}</td>
+              <td>{{ tabledata.total }}</td>
+              <td>{{ tabledata.per  | number:'2.2-2' }} </td>
+              <td>{{ tabledata.grade }}</td>
+
+              <td> <button type="button" class="btn btn-info btn-sm mx-2" (click)="editRecord(i)"
+                  [disabled]="updateIndex > -1 ? true : false"><i class="fa fa-pencil"></i></button>
+                <button class="btn btn-danger btn-sm" [disabled]="updateIndex > -1 ? true : false"
+                  (click)="DeleteRecord(i)"><i class="fa fa-trash"></i></button>
+              </td>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <td><input type="checkbox" [disabled]="isdisabled" [checked]="isChecked"></td>
+              <td><input type="text" class="form-control" [(ngModel)]="tabledata.fname" formControlName="fname">
+                <span class="text-danger"
+                  *ngIf="studentForm.get('fname').hasError('required') && studentForm.get('fname').touched ">
+                  First Name is required
+                </span>
+              </td>
+              <td><input type="text" class="form-control" [(ngModel)]="tabledata.lname" formControlName="lname">
+                <span class="text-danger"
+                  *ngIf="studentForm.get('lname').hasError('required') && studentForm.get('lname').touched ">
+                  Last Name is required
+                </span>
+              </td>
+              <td><input type="email" class="form-control" [(ngModel)]="tabledata.mail" formControlName="mail">
+                <span class="text-danger"
+                *ngIf="studentForm.get('mail').hasError('required') && studentForm.get('mail').touched ">
+                Mail is required
+              </span>
+              <span class="text-danger"
+                *ngIf="studentForm.get('mail').hasError('pattern') && studentForm.get('mail').touched ">
+               Enter valid mail
+              </span>
+              </td>
+              <td><input type="text" class="form-control" [(ngModel)]="tabledata.clan" formControlName="clan" maxlength="2">
+                <span class="text-danger"
+                  *ngIf="studentForm.get('clan').hasError('required') && studentForm.get('clan').touched ">
+                  Add c language Mark
+                </span>
+
+                <span class="text-danger" *ngIf="studentForm.get('clan').hasError('pattern')">
+                  Enter only Digit.
+                </span>
+              </td>
+
+              <td><input type="text" class="form-control" [(ngModel)]="tabledata.java" formControlName="java" maxlength="2">
+                <span class="text-danger"
+                *ngIf="studentForm.get('java').hasError('required') && studentForm.get('java').touched ">
+                Add java Mark
+              </span>
+              <span class="text-danger" *ngIf="studentForm.get('java').hasError('pattern')">
+                Enter only Digit.
+              </span>
+              </td>
+
+              <td><input class="form-control" formControlName="asp" [(ngModel)]="tabledata.asp" type="text" maxlength="2">
+                <span class="text-danger"
+                  *ngIf="studentForm.get('asp').hasError('required') && studentForm.get('asp').touched ">
+                  Add asp Mark
+                </span>
+                <span class="text-danger" *ngIf="studentForm.get('asp').hasError('pattern')">
+                  Enter only Digit.
+                </span></td>
+             
+              <td>{{ tabledata.total }}</td>
+              <td>{{ tabledata.per | number:'2.2-2' }}</td>
+              <td>{{ tabledata.grade }}</td>
+              <td>
+                <button class="btn btn-dark fa fa-save btn-sm" (click)="saveChange(i)"></button>
+                &nbsp;&nbsp; <button type="button" class="btn btn-warning btn-sm fa fa-remove"
+                  (click)="cancelEdit(i)"></button>
+              </td>
+            </ng-template>
+          </tr>
+
+          <tr *ngIf="lstStudentData?.length == 0">
+            <td colspan="12">
+              No Record found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Modal fade -->
+      <div class="modal fade" #addRecord="bs-modal" bsModal role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Record</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+              <div class="row">
+                <div class="col col-lg-4 col-md-4">
+                  <div class="form-group">
+                    <label for="name"><b>First Name</b></label>
+                    <input class="form-control" id="name" formControlName="fname" name="fname" type="text">
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('fname').hasError('required') && studentForm.get('fname').touched ">
+                      First Name is required
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col col-lg-4 col-md-4">
+                  <div class="form-group">
+                    <label for="dob"><b>Last Name</b></label>
+                    <input class="form-control " formControlName="lname" type="text">
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('lname').hasError('required') && studentForm.get('lname').touched ">
+                      Last Name is required
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col col-lg-4 col-md-4">
+                  <div class="form-group">
+                    <label for="dob"><b>E-mail</b></label>
+                    <input class="form-control " formControlName="mail" type="email">
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('mail').hasError('required') && studentForm.get('mail').touched ">
+                      Email is required
+                    </span>
+
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('mail').hasError('email') && studentForm.get('mail').touched ">
+                      Please Enter Valid mail address
+                    </span>
+                  </div>
+                </div>
+              </div><!-- fName, lName& mail -->
+              <div class="row col">
+                <label>
+                  <h5>Marks</h5>
+                </label>
+              </div>
+              <div class="row">
+                <div class="col col-lg-4 col-md-4">
+                  <div class="form-group">
+                    <label for="name"><b>C Language</b></label>
+                    <input class="form-control" formControlName="clan" type="text" maxlength="2">
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('clan').hasError('required') && studentForm.get('clan').touched ">
+                      Add c language Mark
+                    </span>
+
+                    <span class="text-danger" *ngIf="studentForm.get('clan').hasError('pattern')">
+                      Enter only Digit.
+                    </span>
+
+                  </div>
+                </div>
+
+                <div class="col col-lg-4 col-md-4">
+                  <div class="form-group">
+                    <label for="name"><b>Java</b></label>
+                    <input class="form-control" formControlName="java" type="text" maxlength="2">
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('java').hasError('required') && studentForm.get('java').touched ">
+                      Add java Mark
+                    </span>
+
+                    <span class="text-danger" *ngIf="studentForm.get('java').hasError('pattern')">
+                      Enter only Digit.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="col col-lg-4 col-md-4">
+                  <div class="form-group">
+                    <label for="name"><b>Asp.net</b></label>
+                    <input class="form-control" formControlName="asp" type="text" maxlength="2">
+                    <span class="text-danger"
+                      *ngIf="studentForm.get('asp').hasError('required') && studentForm.get('asp').touched ">
+                      Add asp Mark
+                    </span>
+
+                    <span class="text-danger" *ngIf="studentForm.get('asp').hasError('pattern')">
+                      Enter only Digit.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-danger float-left btn-sm" (click)="close()">Close</button>
+              <button class="btn btn-primary btn-sm" (click)="add_Record(i)">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal end -->
+    </div>
+  </form>
+</div>
