@@ -3,6 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { CommonService } from '../service/common-service.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { log } from 'util';
+const emailPattern = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,63}';
 
 @Component({
   selector: 'app-crud-demo',
@@ -24,7 +25,7 @@ export class CrudDemoComponent implements OnInit {
     this.studentForm = this.fb.group({
       fname: ['', Validators.required],
       lname: ['', Validators.required],
-      mail: ['', Validators.compose([Validators.required, Validators.email])],
+      mail: ['', Validators.compose([Validators.required, Validators.pattern(emailPattern)])],
       clan: ['', Validators.compose([Validators.required, Validators.pattern('[0-9]\\d{0,1}')])],
       java: ['', Validators.compose([Validators.required, Validators.pattern('[0-9]\\d{0,1}')])],
       asp: ['', Validators.compose([Validators.required, Validators.pattern('[0-9]\\d{0,1}')])],
@@ -83,7 +84,7 @@ export class CrudDemoComponent implements OnInit {
         total: data.total,
         per: data.per,
         grade: data.grade,
-        isselect : data.isselect
+        isselect: data.isselect
       };
       this.editData = {
         fname: data.fname,
@@ -95,7 +96,7 @@ export class CrudDemoComponent implements OnInit {
         total: data.total,
         per: data.per,
         grade: data.grade,
-        isselect : data.isselect
+        isselect: data.isselect
       };
     };
   };
@@ -126,11 +127,11 @@ export class CrudDemoComponent implements OnInit {
         total: data.total,
         per: data.per,
         grade: data.grade,
-        isselect :  data.isselect
+        isselect: data.isselect
       };
       this.lstStudentData[index] = body;
       this.updateIndex = -1;
-    } 
+    }
   };
 
   cancelEdit(index) {
@@ -165,8 +166,8 @@ export class CrudDemoComponent implements OnInit {
         x.isselect = true;
       }
       else {
-         x.isselect = false;
-      } 
+        x.isselect = false;
+      }
     });
 
   }

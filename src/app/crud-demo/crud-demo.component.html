@@ -170,7 +170,7 @@
                     </span>
 
                     <span class="text-danger"
-                      *ngIf="studentForm.get('mail').hasError('email') && studentForm.get('mail').touched ">
+                      *ngIf="studentForm.get('mail').hasError('pattern') && studentForm.get('mail').touched ">
                       Please Enter Valid mail address
                     </span>
                   </div>
@@ -232,7 +232,7 @@
             </div>
             <div class="modal-footer">
               <button class="btn btn-danger float-left btn-sm" (click)="close()">Close</button>
-              <button class="btn btn-primary btn-sm" (click)="add_Record(i)">Save</button>
+              <button class="btn btn-primary btn-sm" (click)="add_Record()">Save</button>
             </div>
           </div>
         </div>
